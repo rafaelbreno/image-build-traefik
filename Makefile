@@ -43,8 +43,6 @@ image-build:
 image-push-digest:
 	docker buildx build \
 		${IID_FILE_FLAG} \
-		--sbom=true \
-		--attest type=provenance,mode=max \
 		--progress=plain \
 		--platform=$(TARGET_PLATFORMS) \
 		--metadata-file metadata-$(subst /,-,$(REPO))-$(subst /,-,$(TARGET_PLATFORMS)).json \
@@ -53,6 +51,11 @@ image-push-digest:
 		--build-arg PKG=$(PKG) \
 		--build-arg TAG=$(BTAG) \
 		--tag $(REPO)/hardened-traefik .
+
+.PHONY: image-push-prime-digest
+image-push-prime-digest:
+	BUILDX_ARGS="--sbom=true --attest type=provenance,mode=max" \
+	$(MAKE) image-push-digest
 
 .PHONY: image-scan
 image-scan:
