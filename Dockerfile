@@ -15,13 +15,17 @@ RUN set -x && \
 ARG PKG
 ARG TAG
 ARG TARGETARCH
+ARG TRAEFIK_SRC_SHA256="77a39c7646a202005f75b7a188efcb4ea188b5d79f995805ec693b45e043373c"
 
 # Download and extract Release src tarball, we do this instead of cloning because the
 # static webui files are already generated and included in the tarball.
 # Avoids needing to run a docker-in-docker build to generate the webui files.
 RUN mkdir -p $GOPATH/src/${PKG}
-RUN curl -fsSL "https://github.com/traefik/traefik/releases/download/${TAG}/traefik-${TAG}.src.tar.gz" | \
-    tar -xzf - -C $GOPATH/src/${PKG}
+RUN curl -fsSL "https://github.com/traefik/traefik/releases/download/${TAG}/traefik-${TAG}.src.tar.gz" \
+    -o /tmp/traefik.src.tar.gz && \
+    echo "${TRAEFIK_SRC_SHA256}  /tmp/traefik.src.tar.gz" | sha256sum -c - && \
+    tar -xzf /tmp/traefik.src.tar.gz -C $GOPATH/src/${PKG} && \
+    rm /tmp/traefik.src.tar.gz
 WORKDIR $GOPATH/src/${PKG}
 
 RUN --mount=type=cache,id=gomod,target=/go/pkg/mod go generate
