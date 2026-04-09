@@ -15,7 +15,7 @@ RUN set -x && \
 ARG PKG
 ARG TAG
 ARG TARGETARCH
-ARG TRAEFIK_SRC_SHA256="77a39c7646a202005f75b7a188efcb4ea188b5d79f995805ec693b45e043373c"
+ARG TRAEFIK_SRC_SHA256="42a87c1061e6ae97dabac4142281b151ff5cbc7ce7bfbca4b0f61ee1ae0cf7dc"
 
 # Download and extract Release src tarball, we do this instead of cloning because the
 # static webui files are already generated and included in the tarball.
